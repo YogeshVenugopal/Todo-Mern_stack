@@ -27,8 +27,10 @@ function App() {
       }).then((res) => {
         if (res.ok) {
           // add a item to the list
-          setTodos([...todos, { title, desc }])
-          setSuccess("Your items is added")
+          setTodos([...todos, { title, desc }]);
+          setTitle("");
+          setDesc("");
+          setSuccess("Your items is added");
           setTimeout(() => {
             setSuccess("")
           }, 3000)
@@ -94,6 +96,17 @@ function App() {
   const handleCancelEdit = () => {
     setEditId(-1); 
   }
+  const handleDelete = (id) => {
+    if(window.confirm('Are You sure to delete this items ??')){
+      fetch(apiUrl+"todos/"+id,{
+        method:"DELETE",
+      })
+      .then(() => {
+        const updateTodos = todos.filter((item) => item._id !==id )
+        setTodos(updateTodos)
+      })
+    }
+  }
   return (
     <>
       <div className="navbar-container">
@@ -139,7 +152,7 @@ function App() {
                         ?
                         <>
                           <i onClick={() => handleEdit(items)} class="fa-regular fa-pen-to-square"></i>
-                          <i class="fa-solid fa-trash trash"></i>
+                          <i class="fa-solid fa-trash trash" onClick={() => {handleDelete(items._id)}}></i>
                         </>
                         :
                         <>
